@@ -4,11 +4,12 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import petbook.dto.UserDTO;
+import petbook.dto.user.UserDTO;
 import petbook.exception.EmailExistException;
 import petbook.model.User;
 import petbook.repository.UserRepository;
@@ -19,6 +20,8 @@ import petbook.repository.UserRepository;
 public class UserService {
 	
 	private static final String USER_WITH_EMAIL_EXIST = "User with email %s exist.";
+	
+	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private ModelMapper mapper;
@@ -33,6 +36,8 @@ public class UserService {
 		checkExistEmail(request.getEmail());
 		
 		User userToSave = mapper.map(request, User.class);
+		
+		userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
 		
 		User userSaved = userRepository.save(userToSave);
 		
