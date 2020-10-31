@@ -52,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 	.permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/user/auth")
                 	.permitAll()
+                .antMatchers("/v1/pet**")
+                	.hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             .and()
                 .sessionManagement()

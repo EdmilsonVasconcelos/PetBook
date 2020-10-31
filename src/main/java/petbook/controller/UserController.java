@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,12 +61,14 @@ public class UserController {
     public TokenDTO autenticar(@RequestBody CredentialsDTO credenciais){
         try{
         	
+        	log.debug("UserController.autenticar - Start - credenciais:  [{}]", credenciais);
+        	
             User participant = User.builder()
                     .email(credenciais.getLogin())
                     .password(credenciais.getPassword())
                     .build();
             
-            UserDetails usuarioAutenticado = userServiceImpl.autenticar(participant);
+            userServiceImpl.autenticar(participant);
             
             String token = jwtService.gerarToken(participant);
             
