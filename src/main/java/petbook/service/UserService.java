@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import petbook.dto.user.UserDTO;
+import petbook.dto.user.UserRequestDTO;
+import petbook.dto.user.UserResponseDTO;
 import petbook.exception.EmailExistException;
 import petbook.model.User;
 import petbook.repository.UserRepository;
@@ -29,7 +30,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public UserDTO saveUser(UserDTO request) {
+	public UserResponseDTO saveUser(UserRequestDTO request) {
 		
 		log.debug("UserService.saveUser - Start - Input: Request [{}]", request);
 		
@@ -41,7 +42,7 @@ public class UserService {
 		
 		User userSaved = userRepository.save(userToSave);
 		
-		UserDTO response = mapper.map(userSaved, UserDTO.class);
+		UserResponseDTO response = mapper.map(userSaved, UserResponseDTO.class);
 		
 		log.debug("UserService.saveUser - End - Request:  [{}], Response: [{}] - ", request, response);
 		

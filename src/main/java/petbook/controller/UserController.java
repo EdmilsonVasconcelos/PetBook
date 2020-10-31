@@ -19,7 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import petbook.dto.credential.CredentialsDTO;
 import petbook.dto.token.TokenDTO;
-import petbook.dto.user.UserDTO;
+import petbook.dto.user.UserRequestDTO;
+import petbook.dto.user.UserResponseDTO;
 import petbook.exception.InvalidPasswordException;
 import petbook.model.User;
 import petbook.security.jwt.JwtService;
@@ -40,16 +41,16 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO request) {
+	public ResponseEntity<UserResponseDTO> saveUser(@Valid @RequestBody UserRequestDTO request) {
 		
 		log.debug("UserController.saveUser - Start - Request:  [{}]", request);
 		
-		UserDTO userSaved = userService.saveUser(request);
+		UserResponseDTO userSaved = userService.saveUser(request);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userSaved.getId())
 				.toUri();
 		
-		ResponseEntity<UserDTO> response = ResponseEntity.created(uri).body(userSaved);
+		ResponseEntity<UserResponseDTO> response = ResponseEntity.created(uri).body(userSaved);
 		
 		log.debug("UserController.saveUser - End - Request:  [{}], Response: [{}] - ", request, response);
 		
