@@ -89,7 +89,6 @@ public class PostService {
 	private void checkPetForUser(Long idPet) {
 		User tutor = getUserByEmail(jwtService.getCurrentUser());
 		Pet pet = getPetById(idPet);
-		
 		if(!pet.getId().equals(tutor.getId())) {
 			throw new NotAllowedException();
 		}
