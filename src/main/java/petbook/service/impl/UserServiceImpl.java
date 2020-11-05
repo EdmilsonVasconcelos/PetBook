@@ -1,56 +1,62 @@
 package petbook.service.impl;
 
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import petbook.exception.InvalidPasswordException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import petbook.dto.user.UserRequestDTO;
+import petbook.dto.user.UserResponseDTO;
+import petbook.exception.EmailExistException;
+import petbook.model.User;
 import petbook.repository.UserRepository;
+import petbook.service.UserService;
 
+@Slf4j
 @Service
-public class UserServiceImpl implements UserDetailsService {
-	
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+	private static final String USER_WITH_EMAIL_EXIST = "User with email %s exist.";
+
+	private final PasswordEncoder passwordEncoder;
+
 	@Autowired
-    private PasswordEncoder encoder;
+	private ModelMapper mapper;
 
-    @Autowired
-    private UserRepository repository;
-
-    @Transactional
-    public petbook.model.User salvar(petbook.model.User user){
-        return repository.save(user);
-    }
-	
-    public UserDetails autenticar(petbook.model.User participant){
-    	UserDetails user = loadUserByUsername(participant.getEmail());
-        boolean senhasBatem = encoder.matches(participant.getPassword(), user.getPassword());
-
-        if(senhasBatem){
-            return user;
-        }
-
-        throw new InvalidPasswordException();
-    }
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		petbook.model.User participant = repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found in database"));
+	public UserResponseDTO saveUser(UserRequestDTO request) {
 
-        String[] roles = participant.isAdmin() ?
-                new String[]{"ADMIN", "USER"} : new String[]{"USER"};
+		log.debug("UserService.saveUser - Start - Input: Request [{}]", request);
 
-        return User
-                .builder()
-                .username(participant.getEmail())
-                .password(participant.getPassword())
-                .roles(roles)
-                .build();
-    }
+		checkExistEmail(request.getEmail());
+
+		User userToSave = mapper.map(request, User.class);
+
+		userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
+
+		User userSaved = userRepository.save(userToSave);
+
+		UserResponseDTO response = mapper.map(userSaved, UserResponseDTO.class);
+
+		log.debug("UserService.saveUser - End - Request:  [{}], Response: [{}] - ", request, response);
+
+		return response;
+
+	}
+
+	private void checkExistEmail(String email) {
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isPresent()) {
+			throw new EmailExistException(String.format(USER_WITH_EMAIL_EXIST, email));
+		}
+	}
 
 }

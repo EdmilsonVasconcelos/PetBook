@@ -14,13 +14,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import petbook.security.jwt.JwtAuthFilter;
 import petbook.security.jwt.JwtService;
-import petbook.service.impl.UserServiceImpl;
+import petbook.service.impl.AuthServiceImpl;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-    private UserServiceImpl userService;
+    private AuthServiceImpl userService;
 	
     @Autowired
     private JwtService jwtService;

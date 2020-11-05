@@ -24,7 +24,7 @@ import petbook.dto.user.UserResponseDTO;
 import petbook.exception.InvalidPasswordException;
 import petbook.model.User;
 import petbook.security.jwt.JwtService;
-import petbook.service.UserService;
+import petbook.service.impl.AuthServiceImpl;
 import petbook.service.impl.UserServiceImpl;
 
 @Slf4j
@@ -33,12 +33,12 @@ import petbook.service.impl.UserServiceImpl;
 @RequiredArgsConstructor
 public class UserController {
 	
-	private final UserServiceImpl userServiceImpl;
+	private final AuthServiceImpl userServiceImpl;
 	
 	private final JwtService jwtService;
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@PostMapping(value = "/user")
 	public ResponseEntity<UserResponseDTO> saveUser(@Valid @RequestBody UserRequestDTO request) {
@@ -69,7 +69,7 @@ public class UserController {
                     .password(credenciais.getPassword())
                     .build();
             
-            userServiceImpl.autenticar(participant);
+            userServiceImpl.autheticate(participant);
             
             String token = jwtService.gerarToken(participant);
             

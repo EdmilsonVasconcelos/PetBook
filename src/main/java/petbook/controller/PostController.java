@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import petbook.dto.post.ListPostsResponseDTO;
 import petbook.dto.post.PostRequestDTO;
 import petbook.dto.post.PostResponseDTO;
-import petbook.service.PostService;
+import petbook.service.impl.PostServiceImpl;
 
 @Slf4j
 @RequestMapping("/v1")
@@ -27,7 +27,7 @@ import petbook.service.PostService;
 public class PostController {
 	
 	@Autowired
-	private PostService postService;
+	private PostServiceImpl postService;
 	
 	@PostMapping(value = "/post/{idPet}")
 	public ResponseEntity<PostResponseDTO> savePost(@Valid @RequestBody PostRequestDTO request,
