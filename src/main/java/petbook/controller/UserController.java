@@ -58,7 +58,7 @@ public class UserController {
 		
 	}
 	
-	@PostMapping(value = "/auth")
+	@PostMapping(value = "/user/auth")
     public TokenDTO autenticar(@RequestBody CredentialsDTO credenciais){
         try{
         	
