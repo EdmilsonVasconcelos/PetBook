@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,20 @@ public class PetController {
 		PetsForUserDTO response = petService.getPetsForUser();
 		
 		log.debug("PetController.getPetsForUser - End - Response: [{}]", response);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
+	}
+	
+	
+	@GetMapping(value = "/pet/profile/{idPet}")
+	public ResponseEntity<PetResponseDTO> getProfilePet(@PathVariable("idPet") Long idPet) {
+		
+		log.debug("PetController.getProfilePet - Start - idPet: [{}]", idPet);
+		
+		PetResponseDTO response = petService.getProfilePet(idPet);
+		
+		log.debug("PetController.getProfilePet - End - idPet: [{}], Response: [{}]", idPet, response);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 		

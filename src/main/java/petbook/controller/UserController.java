@@ -28,7 +28,7 @@ import petbook.service.UserService;
 import petbook.service.impl.UserServiceImpl;
 
 @Slf4j
-@RequestMapping("/v1/user")
+@RequestMapping("/v1")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -40,7 +40,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping
+	@PostMapping(value = "/user")
 	public ResponseEntity<UserResponseDTO> saveUser(@Valid @RequestBody UserRequestDTO request) {
 		
 		log.debug("UserController.saveUser - Start - Request:  [{}]", request);
@@ -58,7 +58,7 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/auth")
+	@PostMapping(value = "/auth")
     public TokenDTO autenticar(@RequestBody CredentialsDTO credenciais){
         try{
         	
@@ -81,5 +81,4 @@ public class UserController {
             
         }
     }
-
 }

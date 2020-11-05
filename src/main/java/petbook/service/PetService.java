@@ -12,6 +12,7 @@ import petbook.dto.pet.PetRequestDTO;
 import petbook.dto.pet.PetResponseDTO;
 import petbook.dto.pet.PetsForUserDTO;
 import petbook.dto.user.UserResponseDTO;
+import petbook.exception.PetNotFoundException;
 import petbook.exception.TutorNotFoundException;
 import petbook.model.Pet;
 import petbook.model.User;
@@ -24,6 +25,8 @@ import petbook.security.jwt.JwtService;
 public class PetService {
 	
 	private static final String USER_WITH_EMAIL_NOT_EXIST = "User with email %s not exist.";
+	
+	private static final String PET_WITH_ID_NOT_EXIST = "Pet with id %d not exist.";
 	
 	@Autowired
 	private ModelMapper mapper;
@@ -79,6 +82,24 @@ public class PetService {
 		
 		return response;
 		
+	}
+	
+	public PetResponseDTO getProfilePet(Long idPet) {
+		
+		log.debug("PetService.getProfilePet - Start - Input: idPet [{}]", idPet);
+		
+		Pet pet = findPetById(idPet);
+		
+		PetResponseDTO response = mapper.map(pet, PetResponseDTO.class);
+		
+		log.debug("PetService.getProfilePet - End - Input: idPet [{}], Reponse [{}]", idPet, response);
+		
+		return response;
+	}
+	
+	private Pet findPetById(Long idPet) {
+		return petRepository.findById(idPet)
+				.orElseThrow(() -> new PetNotFoundException(String.format(String.format(PET_WITH_ID_NOT_EXIST, idPet))));
 	}
 	
 	private User getUserByEmail(String email) {
