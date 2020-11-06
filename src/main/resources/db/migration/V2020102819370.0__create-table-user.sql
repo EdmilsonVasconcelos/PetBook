@@ -3,8 +3,8 @@ CREATE TABLE user(
     email varchar(255) not null,
     password TEXT not null,
     admin boolean not null,
-    created DATETIME(6),
-    updated DATETIME(6),
+    created DATETIME,
+    updated DATETIME,
   
     primary key (id)
 )engine=InnoDB default charset=utf8;
