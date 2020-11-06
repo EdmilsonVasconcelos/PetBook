@@ -1,3 +1,0 @@
-ALTER TABLE pet ADD id_tutor BIGINT NOT NULL;
-
-ALTER TABLE pet ADD CONSTRAINT id_tutor_fk FOREIGN KEY(id_tutor) REFERENCES user(id);
