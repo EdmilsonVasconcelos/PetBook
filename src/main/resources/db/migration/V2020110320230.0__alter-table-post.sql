@@ -1,0 +1,3 @@
+ALTER TABLE post ADD id_pet BIGINT NOT NULL;
+
+ALTER TABLE post ADD CONSTRAINT id_pet_fk FOREIGN KEY(id_pet) REFERENCES pet(id);
