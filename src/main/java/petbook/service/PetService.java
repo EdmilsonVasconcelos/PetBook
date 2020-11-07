@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import petbook.dto.pet.PetRequestDTO;
 import petbook.dto.pet.PetResponseDTO;
 import petbook.dto.pet.PetsForUserDTO;
+import petbook.dto.pet.SearchProfilesPetResponseDTO;
 import petbook.dto.user.UserResponseDTO;
 import petbook.exception.PetNotFoundException;
 import petbook.exception.TutorNotFoundException;
@@ -95,6 +96,20 @@ public class PetService {
 		log.debug("PetService.getProfilePet - End - Input: idPet [{}], Reponse [{}]", idPet, response);
 		
 		return response;
+	}
+	
+	public SearchProfilesPetResponseDTO searchProfilesPet(String namePet) {
+		
+		log.debug("PetService.SearchProfilesPetResponseDTO - Start - Input: namePet [{}]", namePet);
+		
+		List<Pet> petsFound = petRepository.findByNameContaining(namePet);
+		
+		SearchProfilesPetResponseDTO response = mapper.map(petsFound, SearchProfilesPetResponseDTO.class);
+		
+		log.debug("PetService.SearchProfilesPetResponseDTO - End - Input: namePet [{}], Response: [{}]", namePet, response);
+		
+		return response;
+		
 	}
 	
 	private Pet findPetById(Long idPet) {

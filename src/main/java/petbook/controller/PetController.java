@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import petbook.dto.pet.PetRequestDTO;
 import petbook.dto.pet.PetResponseDTO;
 import petbook.dto.pet.PetsForUserDTO;
+import petbook.dto.pet.SearchProfilesPetResponseDTO;
 import petbook.service.PetService;
 
 @Slf4j
@@ -69,6 +71,20 @@ public class PetController {
 		PetResponseDTO response = petService.getProfilePet(idPet);
 		
 		log.debug("PetController.getProfilePet - End - idPet: [{}], Response: [{}]", idPet, response);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
+	}
+	
+	@GetMapping(value = "/pet/search-profile")
+	public ResponseEntity<SearchProfilesPetResponseDTO> searchProfilesPet(
+											@RequestParam String namePet) {
+		
+		log.debug("PetController.searchProfilesPet - Start - namePet: [{}]", namePet);
+		
+		SearchProfilesPetResponseDTO response = petService.searchProfilesPet(namePet);
+		
+		log.debug("PetController.searchProfilesPet - Start - namePet: [{}], Reponse: [{}]", namePet, response);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 		
