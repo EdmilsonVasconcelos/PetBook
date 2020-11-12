@@ -102,9 +102,14 @@ public class PetService {
 		
 		log.debug("PetService.SearchProfilesPetResponseDTO - Start - Input: namePet [{}]", namePet);
 		
-		List<Pet> petsFound = petRepository.findByNameContaining(namePet);
+		List<Pet> petsFound = petRepository.findByNameContainingIgnoreCase(namePet);
 		
-		SearchProfilesPetResponseDTO response = mapper.map(petsFound, SearchProfilesPetResponseDTO.class);
+		List<PetResponseDTO> petsReponseDTO = petsFound.stream()
+				.map(pet -> mapper.map(pet, PetResponseDTO.class))
+				.collect(Collectors.toList());
+		
+		SearchProfilesPetResponseDTO response = SearchProfilesPetResponseDTO.builder()
+				.petsFound(petsReponseDTO).build();
 		
 		log.debug("PetService.SearchProfilesPetResponseDTO - End - Input: namePet [{}], Response: [{}]", namePet, response);
 		
